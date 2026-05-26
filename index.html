@@ -26,14 +26,30 @@ body{background:var(--bg);font-family:var(--font);color:var(--ink);font-size:13p
 .topbar-sub{font-size:11.5px;font-weight:600;color:var(--ink2);}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .topbar-date{font-size:11px;font-weight:500;color:var(--ink2);}
-
-/* sync status indicator */
 .sync-dot{width:8px;height:8px;border-radius:50%;background:#94a3b8;flex-shrink:0;transition:background .3s;}
 .sync-dot.synced{background:var(--green);}
 .sync-dot.syncing{background:var(--orange);animation:pulse 1s infinite;}
 .sync-dot.error{background:var(--red);}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
 .sync-label{font-size:11px;font-weight:600;color:var(--ink2);}
+
+/* ── LAST UPDATED BANNER ── */
+.update-banner{
+  display:none;
+  align-items:center;
+  gap:10px;
+  padding:8px 20px;
+  background:var(--green-bg);
+  border-bottom:1px solid #a7f3d0;
+  font-size:12px;
+  font-weight:600;
+  color:var(--green);
+  animation:slideDown .3s ease;
+}
+.update-banner.show{display:flex;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+.update-banner-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.update-banner span{color:var(--ink2);font-weight:500;}
 
 /* ── KPIs ── */
 .kpi-row{display:flex;gap:8px;padding:14px 20px 0;overflow-x:auto;}
@@ -45,6 +61,49 @@ body{background:var(--bg);font-family:var(--font);color:var(--ink);font-size:13p
 .n-ink{color:var(--ink);}.n-blue{color:var(--blue);}.n-red{color:var(--red);}
 .n-orange{color:var(--orange);}.n-green{color:var(--green);}.n-purple{color:var(--purple);}
 
+/* ── MAIN LAYOUT (table + activity feed side by side) ── */
+.main-layout{display:flex;gap:0;align-items:flex-start;}
+.table-section{flex:1;min-width:0;}
+
+/* ── ACTIVITY FEED ── */
+.activity-feed{
+  width:280px;
+  flex-shrink:0;
+  background:var(--white);
+  border-left:2px solid var(--line);
+  min-height:calc(100vh - 160px);
+  display:flex;
+  flex-direction:column;
+}
+.feed-header{
+  padding:14px 16px 10px;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.feed-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--ink2);}
+.feed-count{font-size:10px;font-weight:700;padding:1px 7px;border-radius:10px;background:var(--blue-bg);color:var(--blue);}
+.feed-list{display:flex;flex-direction:column;overflow-y:auto;flex:1;max-height:calc(100vh - 220px);}
+.feed-item{
+  padding:10px 14px;
+  border-bottom:1px solid var(--line);
+  transition:background .1s;
+  cursor:pointer;
+}
+.feed-item:hover{background:var(--bg);}
+.feed-item-top{display:flex;align-items:center;gap:6px;margin-bottom:3px;}
+.feed-item-vehicle{font-size:11.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;}
+.feed-item-time{font-size:10px;font-weight:600;color:var(--ink2);white-space:nowrap;flex-shrink:0;}
+.feed-item-text{font-size:11px;color:var(--ink2);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.feed-badge{font-size:9px;font-weight:800;padding:1px 5px;border-radius:8px;text-transform:uppercase;letter-spacing:.3px;flex-shrink:0;}
+.fb-note  {background:var(--blue-bg);color:var(--blue);}
+.fb-eta   {background:var(--orange-bg);color:var(--orange);}
+.fb-status{background:var(--green-bg);color:var(--green);}
+.fb-new   {background:var(--purple-bg);color:var(--purple);}
+.fb-del   {background:var(--red-bg);color:var(--red);}
+.feed-empty{padding:24px 16px;text-align:center;font-size:12px;color:var(--ink2);font-style:italic;}
+
 /* ── TOOLBAR ── */
 .toolbar{display:flex;align-items:center;gap:8px;padding:12px 20px;flex-wrap:wrap;}
 .tabs{display:flex;background:var(--white);border:1.5px solid var(--line);border-radius:8px;padding:3px;gap:2px;}
@@ -52,7 +111,7 @@ body{background:var(--bg);font-family:var(--font);color:var(--ink);font-size:13p
 .tab:hover{background:var(--bg);color:var(--ink);}
 .tab.active{background:var(--ink);color:#fff;}
 .sbox{display:flex;align-items:center;background:var(--white);border:1.5px solid var(--line);border-radius:8px;padding:0 10px;gap:5px;margin-left:auto;}
-.sbox input{border:none;outline:none;font-family:var(--font);font-size:12.5px;color:var(--ink);background:transparent;padding:6px 0;width:180px;}
+.sbox input{border:none;outline:none;font-family:var(--font);font-size:12.5px;color:var(--ink);background:transparent;padding:6px 0;width:160px;}
 .sbox input::placeholder{color:#bcc0ce;}
 .sbox-icon{color:#bcc0ce;font-size:15px;}
 .btn-add{font-family:var(--font);font-size:12px;font-weight:800;padding:7px 14px;background:var(--ink);color:#fff;border:none;border-radius:8px;cursor:pointer;transition:opacity .12s;white-space:nowrap;}
@@ -60,14 +119,14 @@ body{background:var(--bg);font-family:var(--font);color:var(--ink);font-size:13p
 
 /* ── TABLE ── */
 .twrap{padding:0 20px 48px;overflow-x:auto;}
-table{width:100%;border-collapse:separate;border-spacing:0 3px;min-width:880px;}
-thead th{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--ink2);padding:4px 12px 8px;text-align:left;cursor:pointer;white-space:nowrap;user-select:none;}
+table{width:100%;border-collapse:separate;border-spacing:0 3px;min-width:800px;}
+thead th{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--ink2);padding:4px 10px 8px;text-align:left;cursor:pointer;white-space:nowrap;user-select:none;}
 thead th:hover{color:var(--ink);}
 tbody tr{background:var(--white);cursor:pointer;transition:box-shadow .12s,transform .1s;}
 tbody tr:hover{box-shadow:0 3px 16px rgba(0,0,0,.09);transform:translateY(-1px);position:relative;z-index:1;}
 tbody tr.faded{opacity:.48;}
 tbody tr.faded:hover{opacity:.72;}
-td{padding:9px 12px;vertical-align:middle;}
+td{padding:8px 10px;vertical-align:middle;}
 td:first-child{border-radius:10px 0 0 10px;border-left:3px solid transparent;}
 td:last-child{border-radius:0 10px 10px 0;}
 tr.sc td:first-child{border-left-color:var(--red);}
@@ -75,12 +134,16 @@ tr.sw td:first-child{border-left-color:var(--orange);}
 tr.so td:first-child{border-left-color:var(--green);}
 tr.sn td:first-child{border-left-color:var(--blue);}
 tr.sd td:first-child{border-left-color:var(--line);}
-.vname{font-weight:700;font-size:13px;}
+.vname{font-weight:700;font-size:12.5px;}
 .vvin{font-size:10px;color:var(--ink2);font-weight:500;margin-top:1px;}
-.vcell-reason{font-size:12px;color:var(--ink2);max-width:145px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.vvendor{font-size:12px;font-weight:700;white-space:nowrap;}
+.vcell-reason{font-size:11.5px;color:var(--ink2);max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.vvendor{font-size:11.5px;font-weight:700;white-space:nowrap;}
 .vdate{font-size:11px;color:var(--ink2);white-space:nowrap;}
-.note-preview{font-size:11px;color:var(--ink2);max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic;}
+.note-preview{font-size:11px;color:var(--ink2);max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-style:italic;}
+
+/* updated-ago label */
+.updated-ago{font-size:9.5px;font-weight:600;color:var(--ink2);margin-top:2px;opacity:.75;}
+.updated-ago.recent{color:var(--green);opacity:1;}
 
 /* PILLS & CHIPS */
 .pill{display:inline-flex;align-items:center;font-size:12px;font-weight:800;padding:3px 9px;border-radius:20px;white-space:nowrap;}
@@ -100,7 +163,7 @@ tr.sd td:first-child{border-left-color:var(--line);}
 .empty{text-align:center;padding:56px;color:var(--ink2);font-weight:600;font-size:14px;}
 .empty span{display:block;font-size:40px;margin-bottom:10px;}
 
-/* loading screen */
+/* loading */
 .loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:999;}
 .loading-spinner{width:36px;height:36px;border:3px solid var(--line);border-top-color:var(--ink);border-radius:50%;animation:spin .7s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -144,12 +207,12 @@ textarea{resize:vertical;min-height:64px;}
 .bdel:hover{background:#ffe0dd;}
 .bcancel{font-family:var(--font);font-size:12px;font-weight:700;padding:7px 15px;border-radius:8px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink2);cursor:pointer;transition:all .12s;}
 .bcancel:hover{border-color:var(--ink2);color:var(--ink);}
-.bsave{font-family:var(--font);font-size:12px;font-weight:700;padding:7px 18px;border-radius:8px;border:none;background:var(--ink);color:#fff;cursor:pointer;transition:opacity .12s;}
+.bsave{font-family:var(--font);font-size:12px;font-weight:700;padding:7px 18px;border-radius:8px;border:none;background:var(--ink);color:#fff;cursor:pointer;transition:opacity .12s;display:flex;align-items:center;gap:6px;}
 .bsave:hover{opacity:.84;}
-.saving-spinner{display:none;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin-right:6px;}
+.saving-spinner{display:none;width:13px;height:13px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;}
 .bsave.saving .saving-spinner{display:inline-block;}
 
-/* ── ETA REASON MINI MODAL ── */
+/* ETA REASON MINI MODAL */
 .mini-overlay{position:fixed;inset:0;background:rgba(27,31,46,.5);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .14s;}
 .mini-overlay.open{opacity:1;pointer-events:all;}
 .mini-modal{background:var(--white);border-radius:14px;width:460px;max-width:95vw;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.18);transform:scale(.97);transition:transform .14s;}
@@ -169,7 +232,7 @@ textarea{resize:vertical;min-height:64px;}
 </head>
 <body>
 
-<!-- LOADING SCREEN -->
+<!-- LOADING -->
 <div class="loading" id="loading">
   <div class="loading-spinner"></div>
   <div class="loading-text">Connecting to database...</div>
@@ -185,6 +248,12 @@ textarea{resize:vertical;min-height:64px;}
     <div class="sync-dot" id="sync-dot"></div>
     <div class="sync-label" id="sync-label">Connecting...</div>
   </div>
+</div>
+
+<!-- LAST UPDATED BANNER -->
+<div class="update-banner" id="update-banner">
+  <div class="update-banner-dot"></div>
+  <div id="banner-text">Updated just now</div>
 </div>
 
 <!-- KPIs -->
@@ -214,23 +283,41 @@ textarea{resize:vertical;min-height:64px;}
   <button class="btn-add" onclick="openAdd()">＋ Add Vehicle</button>
 </div>
 
-<!-- TABLE -->
-<div class="twrap">
-  <table>
-    <thead><tr>
-      <th onclick="srt('vehicle')" style="padding-left:16px">Vehicle</th>
-      <th onclick="srt('reason')">Reason Sent</th>
-      <th onclick="srt('vendor')">Vendor</th>
-      <th onclick="srt('dateAdded')">Date In</th>
-      <th onclick="srt('days')">Days</th>
-      <th>Status</th>
-      <th onclick="srt('followup')">Follow-Up</th>
-      <th onclick="srt('eta')">ETA</th>
-      <th>Latest Note</th>
-    </tr></thead>
-    <tbody id="tb"></tbody>
-  </table>
-  <div class="empty" id="empty" style="display:none"><span>🔍</span>Nothing matches.</div>
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- TABLE -->
+  <div class="table-section">
+    <div class="twrap">
+      <table>
+        <thead><tr>
+          <th onclick="srt('vehicle')" style="padding-left:14px">Vehicle</th>
+          <th onclick="srt('reason')">Reason Sent</th>
+          <th onclick="srt('vendor')">Vendor</th>
+          <th onclick="srt('dateAdded')">Date In</th>
+          <th onclick="srt('days')">Days</th>
+          <th>Status</th>
+          <th onclick="srt('followup')">Follow-Up</th>
+          <th onclick="srt('eta')">ETA</th>
+          <th>Latest Note</th>
+        </tr></thead>
+        <tbody id="tb"></tbody>
+      </table>
+      <div class="empty" id="empty" style="display:none"><span>🔍</span>Nothing matches.</div>
+    </div>
+  </div>
+
+  <!-- ACTIVITY FEED -->
+  <div class="activity-feed">
+    <div class="feed-header">
+      <div class="feed-title">⚡ Activity Feed</div>
+      <div class="feed-count" id="feed-count">0</div>
+    </div>
+    <div class="feed-list" id="feed-list">
+      <div class="feed-empty">No activity yet.<br>Changes will appear here in real time.</div>
+    </div>
+  </div>
+
 </div>
 
 <!-- VEHICLE MODAL -->
@@ -292,13 +379,11 @@ textarea{resize:vertical;min-height:64px;}
  </div>
 </div>
 
-<!-- Firebase SDKs -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, onValue, set, push, remove, update }
+import { getDatabase, ref, onValue, set, push, remove }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// ── FIREBASE CONFIG ──
 const firebaseConfig = {
   apiKey: "AIzaSyDTTyJv46hx5XmgAowOT4cDpd6Bfr-_iLI",
   authDomain: "pp-tolleson-sublet-tracker.firebaseapp.com",
@@ -315,36 +400,151 @@ const vehiclesRef = ref(db, 'vehicles');
 
 // ── HELPERS ──
 const today = new Date(); today.setHours(0,0,0,0);
-const cd = d => { if(!d) return null; const x=Math.floor((today-new Date(d+'T00:00:00'))/86400000); return x>=0?x:0; };
+const cd  = d => { if(!d) return null; const x=Math.floor((today-new Date(d+'T00:00:00'))/86400000); return x>=0?x:0; };
 const fmt = d => { if(!d) return '—'; return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}); };
 const ts  = () => new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'2-digit',hour:'numeric',minute:'2-digit',hour12:true});
 const g   = id => document.getElementById(id);
 
+// ── TIME AGO ──
+function timeAgo(isoStr) {
+  if (!isoStr) return null;
+  const diff = Math.floor((Date.now() - new Date(isoStr)) / 1000);
+  if (diff < 60)  return 'just now';
+  if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+  return `${Math.floor(diff/86400)}d ago`;
+}
+
 // ── STATE ──
 let vehicles = [];
+let prevVehicles = {};  // fbKey → vehicle snapshot for change detection
+let feedItems = [];     // activity log
+let isFirstLoad = true;
 let eid = null, cf = 'open', sf = 'days', sd = 'desc';
 let _prevEta = null, _pendingEta = null, _etaReasonSelected = null, _etaResolve = null;
 
+// tick to refresh "ago" labels every minute
+setInterval(() => { render(); renderFeed(); }, 60000);
+
 // ── SYNC STATUS ──
 function setSyncStatus(state, label) {
-  const dot = g('sync-dot'), lbl = g('sync-label');
-  dot.className = 'sync-dot ' + state;
-  lbl.textContent = label;
+  g('sync-dot').className = 'sync-dot ' + state;
+  g('sync-label').textContent = label;
 }
 
-// ── FIREBASE LISTENER — real-time updates ──
+// ── BANNER ──
+let bannerTimer = null;
+function showBanner(text) {
+  const b = g('update-banner');
+  g('banner-text').textContent = text;
+  b.classList.add('show');
+  if (bannerTimer) clearTimeout(bannerTimer);
+  bannerTimer = setTimeout(() => b.classList.remove('show'), 5000);
+}
+
+// ── ACTIVITY FEED ──
+function addFeedItem(item) {
+  feedItems.unshift(item); // newest first
+  if (feedItems.length > 50) feedItems = feedItems.slice(0, 50);
+  renderFeed();
+}
+
+function renderFeed() {
+  const el = g('feed-list');
+  g('feed-count').textContent = feedItems.length;
+  if (!feedItems.length) {
+    el.innerHTML = '<div class="feed-empty">No activity yet.<br>Changes will appear here in real time.</div>';
+    return;
+  }
+  el.innerHTML = feedItems.map(item => {
+    const ago = timeAgo(item.isoTime) || item.time;
+    const badgeCls = {note:'fb-note', eta:'fb-eta', status:'fb-status', new:'fb-new', deleted:'fb-del'}[item.type] || 'fb-note';
+    const badgeLabel = {note:'Note', eta:'ETA', status:'Status', new:'Added', deleted:'Deleted'}[item.type] || 'Update';
+    return `<div class="feed-item" onclick="item_click('${item.fbKey||''}')">
+      <div class="feed-item-top">
+        <span class="feed-badge ${badgeCls}">${badgeLabel}</span>
+        <span class="feed-item-vehicle">${item.vehicle}</span>
+        <span class="feed-item-time">${ago}</span>
+      </div>
+      <div class="feed-item-text">${item.text}</div>
+    </div>`;
+  }).join('');
+}
+
+window.item_click = fbKey => {
+  if (fbKey) window.openEdit(fbKey);
+};
+
+// ── FIREBASE LISTENER ──
 onValue(vehiclesRef, snapshot => {
   const data = snapshot.val();
-  vehicles = data
+  const newVehicles = data
     ? Object.entries(data).map(([fbKey, v]) => ({ ...v, fbKey }))
     : [];
+
+  if (!isFirstLoad) {
+    // detect changes and build feed items
+    const newMap = {};
+    newVehicles.forEach(v => { newMap[v.fbKey] = v; });
+
+    // added
+    newVehicles.forEach(v => {
+      if (!prevVehicles[v.fbKey]) {
+        const now = new Date().toISOString();
+        addFeedItem({ type:'new', vehicle:`${v.year} ${v.make} ${v.model}`, text:`New vehicle added — ${v.reason||'no reason'}`, time: ts(), isoTime: now, fbKey: v.fbKey });
+        showBanner(`✦ ${v.year} ${v.make} ${v.model} was just added`);
+        v._updatedAt = now;
+      }
+    });
+
+    // updated
+    newVehicles.forEach(v => {
+      const prev = prevVehicles[v.fbKey];
+      if (!prev) return;
+      const now = new Date().toISOString();
+      // check if notes grew
+      const prevNoteCount = (prev.notes||[]).length;
+      const newNoteCount  = (v.notes||[]).length;
+      if (newNoteCount > prevNoteCount) {
+        const latestNote = v.notes[newNoteCount - 1];
+        const type = latestNote.type || 'note';
+        addFeedItem({ type, vehicle:`${v.year} ${v.make} ${v.model}`, text: latestNote.text, time: ts(), isoTime: now, fbKey: v.fbKey });
+        showBanner(`✦ ${v.year} ${v.make} ${v.model} was just updated`);
+        v._updatedAt = now;
+      } else if (JSON.stringify(v) !== JSON.stringify(prev)) {
+        // field changed but no new note
+        addFeedItem({ type:'status', vehicle:`${v.year} ${v.make} ${v.model}`, text:'Record updated', time: ts(), isoTime: now, fbKey: v.fbKey });
+        showBanner(`✦ ${v.year} ${v.make} ${v.model} was just updated`);
+        v._updatedAt = now;
+      } else {
+        // carry forward existing _updatedAt
+        v._updatedAt = prev._updatedAt;
+      }
+    });
+
+    // deleted
+    Object.keys(prevVehicles).forEach(fbKey => {
+      if (!newMap[fbKey]) {
+        const prev = prevVehicles[fbKey];
+        addFeedItem({ type:'deleted', vehicle:`${prev.year} ${prev.make} ${prev.model}`, text:'Record deleted', time: ts(), isoTime: new Date().toISOString(), fbKey: '' });
+        showBanner(`✦ ${prev.year} ${prev.make} ${prev.model} was removed`);
+      }
+    });
+  }
+
+  // update prevVehicles map
+  prevVehicles = {};
+  newVehicles.forEach(v => { prevVehicles[v.fbKey] = {...v}; });
+
+  vehicles = newVehicles;
+  isFirstLoad = false;
+
   g('loading').style.display = 'none';
   setSyncStatus('synced', 'Live');
   render();
 }, err => {
   g('loading').style.display = 'none';
   setSyncStatus('error', 'Offline');
-  console.error(err);
 });
 
 // ── STATUS ──
@@ -371,6 +571,14 @@ const fulbl = v => {
   const d=cd(v.lastFollowUp);
   return d===0?'<span class="fu-today">Today</span>':`<span class="fu-ok">${d}d ago</span>`;
 };
+
+// updated-ago cell
+function updatedAgoCell(v) {
+  if (!v._updatedAt) return '<div class="updated-ago">—</div>';
+  const ago = timeAgo(v._updatedAt);
+  const isRecent = (Date.now() - new Date(v._updatedAt)) < 600000; // 10 min
+  return `<div class="updated-ago ${isRecent?'recent':''}">${ago}</div>`;
+}
 
 // ── KPIs ──
 function upd() {
@@ -416,7 +624,11 @@ function render() {
     const s=gs(v);
     const lastNote=v.notes&&v.notes.length?v.notes[v.notes.length-1].text:'—';
     return `<tr class="${scls[s]||''} ${s==='done'?'faded':''}" onclick="openEdit('${v.fbKey}')">
-      <td><div class="vname">${v.year} ${v.make} ${v.model}</div><div class="vvin">${v.vin}</div></td>
+      <td>
+        <div class="vname">${v.year} ${v.make} ${v.model}</div>
+        <div class="vvin">${v.vin}</div>
+        ${updatedAgoCell(v)}
+      </td>
       <td class="vcell-reason" title="${v.reason||''}">${v.reason||'—'}</td>
       <td class="vvendor">${v.vendor||'—'}</td>
       <td class="vdate">${fmt(v.dateAdded)}</td>
@@ -498,87 +710,74 @@ window.cancelEtaChange = () => {
 window.confirmEtaChange = () => {
   const custom=g('custom-reason').value.trim();
   const reason=custom||_etaReasonSelected;
-  if(!reason){alert('Please select or type a reason for the ETA change.');return;}
+  if(!reason){alert('Please select or type a reason.');return;}
   g('eta-ov').classList.remove('open');
   if(_etaResolve){_etaResolve(reason);_etaResolve=null;}
 };
 
 // ── SAVE ──
 window.saveRec = async () => {
-  const btn = g('bsave');
+  const btn=g('bsave');
   btn.classList.add('saving'); btn.disabled=true;
-
   const newEta=g('fe').value||null;
   const noteText=g('fn').value.trim();
   const newDateReturned=g('fdr').value||null;
-
-  const data = {
-    vin:g('fv').value.trim().toUpperCase(),
-    stock:g('fs').value.trim(),
-    year:parseInt(g('fy').value)||null,
-    make:g('fmk').value.trim(),
-    model:g('fmd').value.trim(),
-    tech:g('ft').value.trim(),
-    reason:g('fr').value.trim(),
-    vendor:g('fvn').value.trim(),
-    dateAdded:g('fda').value||null,
-    eta:newEta,
-    dateReturned:newDateReturned,
-    lastFollowUp:g('ffu').value||null,
+  const data={
+    vin:g('fv').value.trim().toUpperCase(), stock:g('fs').value.trim(),
+    year:parseInt(g('fy').value)||null, make:g('fmk').value.trim(),
+    model:g('fmd').value.trim(), tech:g('ft').value.trim(),
+    reason:g('fr').value.trim(), vendor:g('fvn').value.trim(),
+    dateAdded:g('fda').value||null, eta:newEta,
+    dateReturned:newDateReturned, lastFollowUp:g('ffu').value||null,
   };
-
-  let newNotes = [];
-
+  let newNotes=[];
   try {
     if (eid) {
-      const v = vehicles.find(x=>x.fbKey===eid);
-      newNotes = [...(v.notes||[])];
-
-      if (_pendingEta !== null && newEta !== _prevEta) {
-        const reason = await askEtaReason();
-        if (!reason) { btn.classList.remove('saving'); btn.disabled=false; return; }
-        newNotes.push({ ts:ts(), type:'eta', text:`ETA changed from ${fmt(_prevEta)||'(none)'} → ${fmt(newEta)||'(none)'}. Reason: ${reason}` });
+      const v=vehicles.find(x=>x.fbKey===eid);
+      newNotes=[...(v.notes||[])];
+      if (_pendingEta!==null && newEta!==_prevEta) {
+        const reason=await askEtaReason();
+        if (!reason){btn.classList.remove('saving');btn.disabled=false;return;}
+        newNotes.push({ts:ts(),type:'eta',text:`ETA changed from ${fmt(_prevEta)||'(none)'} → ${fmt(newEta)||'(none)'}. Reason: ${reason}`});
       }
       if (newDateReturned && !v.dateReturned)
-        newNotes.push({ts:ts(),type:'status',text:`Vehicle marked as completed / returned. Date: ${fmt(newDateReturned)}`});
+        newNotes.push({ts:ts(),type:'status',text:`Vehicle marked completed / returned. Date: ${fmt(newDateReturned)}`});
       if (!newDateReturned && v.dateReturned)
         newNotes.push({ts:ts(),type:'status',text:'Vehicle re-opened (date returned cleared).'});
-      if (noteText)
-        newNotes.push({ts:ts(),type:'note',text:noteText});
-
+      if (noteText) newNotes.push({ts:ts(),type:'note',text:noteText});
       setSyncStatus('syncing','Saving...');
-      await set(ref(db, `vehicles/${eid}`), { ...data, notes: newNotes });
+      await set(ref(db,`vehicles/${eid}`), {...data, notes:newNotes});
     } else {
       if (noteText) newNotes.push({ts:ts(),type:'note',text:noteText});
       setSyncStatus('syncing','Saving...');
-      await push(vehiclesRef, { ...data, notes: newNotes });
+      await push(vehiclesRef, {...data, notes:newNotes});
     }
     setSyncStatus('synced','Saved ✓');
-    setTimeout(()=>setSyncStatus('synced','Live'), 2000);
+    setTimeout(()=>setSyncStatus('synced','Live'),2000);
     window.closeM();
   } catch(err) {
     setSyncStatus('error','Save failed');
-    alert('Error saving: ' + err.message);
+    alert('Error saving: '+err.message);
   }
   btn.classList.remove('saving'); btn.disabled=false;
 };
 
 // ── DELETE ──
 window.delRec = async () => {
-  if (!eid || !confirm('Delete this vehicle record? This cannot be undone.')) return;
+  if (!eid||!confirm('Delete this vehicle record? This cannot be undone.')) return;
   try {
     setSyncStatus('syncing','Deleting...');
-    await remove(ref(db, `vehicles/${eid}`));
+    await remove(ref(db,`vehicles/${eid}`));
     setSyncStatus('synced','Live');
     window.closeM();
   } catch(err) {
     setSyncStatus('error','Delete failed');
-    alert('Error deleting: ' + err.message);
+    alert('Error: '+err.message);
   }
 };
 
 // ── INIT ──
-g('today-lbl').textContent = today.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
+g('today-lbl').textContent=today.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
 document.querySelector('.kpi[data-f="open"]').classList.add('active');
 </script>
 </body>
