@@ -14,7 +14,6 @@
   --green:#059669;--green-bg:#ecfdf5;
   --blue:#2563eb;--blue-bg:#eff6ff;
   --purple:#7c3aed;--purple-bg:#f5f3ff;
-  --teal:#0891b2;--teal-bg:#ecfeff;
   --font:'Plus Jakarta Sans',sans-serif;
 }
 body{background:var(--bg);font-family:var(--font);color:var(--ink);font-size:13px;}
@@ -27,8 +26,14 @@ body{background:var(--bg);font-family:var(--font);color:var(--ink);font-size:13p
 .topbar-sub{font-size:11.5px;font-weight:600;color:var(--ink2);}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .topbar-date{font-size:11px;font-weight:500;color:var(--ink2);}
-.btn-export{font-family:var(--font);font-size:11.5px;font-weight:700;padding:5px 12px;border:1.5px solid var(--line);background:var(--white);color:var(--ink2);border-radius:7px;cursor:pointer;transition:all .12s;}
-.btn-export:hover{border-color:var(--ink);color:var(--ink);}
+
+/* sync status indicator */
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#94a3b8;flex-shrink:0;transition:background .3s;}
+.sync-dot.synced{background:var(--green);}
+.sync-dot.syncing{background:var(--orange);animation:pulse 1s infinite;}
+.sync-dot.error{background:var(--red);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.sync-label{font-size:11px;font-weight:600;color:var(--ink2);}
 
 /* ── KPIs ── */
 .kpi-row{display:flex;gap:8px;padding:14px 20px 0;overflow-x:auto;}
@@ -37,8 +42,8 @@ body{background:var(--bg);font-family:var(--font);color:var(--ink);font-size:13p
 .kpi.active{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink);}
 .kpi-num{font-size:26px;font-weight:800;line-height:1;letter-spacing:-1px;}
 .kpi-lbl{font-size:10px;font-weight:700;color:var(--ink2);margin-top:2px;text-transform:uppercase;letter-spacing:.5px;}
-.n-ink{color:var(--ink);} .n-blue{color:var(--blue);} .n-red{color:var(--red);}
-.n-orange{color:var(--orange);} .n-green{color:var(--green);} .n-purple{color:var(--purple);}
+.n-ink{color:var(--ink);}.n-blue{color:var(--blue);}.n-red{color:var(--red);}
+.n-orange{color:var(--orange);}.n-green{color:var(--green);}.n-purple{color:var(--purple);}
 
 /* ── TOOLBAR ── */
 .toolbar{display:flex;align-items:center;gap:8px;padding:12px 20px;flex-wrap:wrap;}
@@ -95,6 +100,12 @@ tr.sd td:first-child{border-left-color:var(--line);}
 .empty{text-align:center;padding:56px;color:var(--ink2);font-weight:600;font-size:14px;}
 .empty span{display:block;font-size:40px;margin-bottom:10px;}
 
+/* loading screen */
+.loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:999;}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--line);border-top-color:var(--ink);border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:13px;font-weight:600;color:var(--ink2);}
+
 /* ── MODAL BASE ── */
 .overlay{position:fixed;inset:0;background:rgba(27,31,46,.45);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .16s;}
 .overlay.open{opacity:1;pointer-events:all;}
@@ -105,8 +116,6 @@ tr.sd td:first-child{border-left-color:var(--line);}
 .msub{font-size:11px;color:var(--ink2);font-weight:500;margin-top:3px;}
 .mclose{width:28px;height:28px;border-radius:7px;border:1.5px solid var(--line);background:transparent;color:var(--ink2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s;}
 .mclose:hover{background:var(--bg);color:var(--ink);}
-
-/* form grid */
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .fg .full{grid-column:1/-1;}
 .fl{display:flex;flex-direction:column;gap:4px;}
@@ -116,15 +125,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--ink);background:var(-
 textarea{resize:vertical;min-height:64px;}
 .eta-wrap{position:relative;}
 .eta-changed{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:var(--orange);pointer-events:none;}
-
-/* section divider */
 .msec{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--ink2);border-top:1px solid var(--line);padding-top:14px;margin-top:6px;margin-bottom:10px;}
-
-/* NOTE HISTORY */
 .note-history{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;border:1.5px solid var(--line);border-radius:8px;padding:10px;background:var(--bg);}
 .note-entry{background:var(--white);border-radius:7px;padding:8px 10px;border-left:3px solid var(--line);}
 .note-entry.note-eta{border-left-color:var(--orange);}
 .note-entry.note-user{border-left-color:var(--blue);}
+.note-entry.note-status{border-left-color:var(--green);}
 .note-meta{font-size:10px;font-weight:700;color:var(--ink2);margin-bottom:3px;display:flex;align-items:center;gap:6px;}
 .note-type-badge{font-size:9px;font-weight:800;padding:1px 6px;border-radius:10px;text-transform:uppercase;letter-spacing:.4px;}
 .ntb-eta{background:var(--orange-bg);color:var(--orange);}
@@ -132,10 +138,7 @@ textarea{resize:vertical;min-height:64px;}
 .ntb-status{background:var(--green-bg);color:var(--green);}
 .note-text{font-size:12px;color:var(--ink);line-height:1.5;}
 .note-empty{font-size:12px;color:var(--ink2);font-style:italic;text-align:center;padding:12px 0;}
-
 .add-note-area{display:flex;flex-direction:column;gap:6px;}
-
-/* modal actions */
 .mactions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);}
 .bdel{font-family:var(--font);font-size:12px;font-weight:700;padding:7px 13px;border-radius:8px;border:1.5px solid #ffd0cc;background:var(--red-bg);color:var(--red);cursor:pointer;margin-right:auto;transition:background .12s;}
 .bdel:hover{background:#ffe0dd;}
@@ -143,6 +146,8 @@ textarea{resize:vertical;min-height:64px;}
 .bcancel:hover{border-color:var(--ink2);color:var(--ink);}
 .bsave{font-family:var(--font);font-size:12px;font-weight:700;padding:7px 18px;border-radius:8px;border:none;background:var(--ink);color:#fff;cursor:pointer;transition:opacity .12s;}
 .bsave:hover{opacity:.84;}
+.saving-spinner{display:none;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;margin-right:6px;}
+.bsave.saving .saving-spinner{display:inline-block;}
 
 /* ── ETA REASON MINI MODAL ── */
 .mini-overlay{position:fixed;inset:0;background:rgba(27,31,46,.5);backdrop-filter:blur(4px);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .14s;}
@@ -164,6 +169,12 @@ textarea{resize:vertical;min-height:64px;}
 </head>
 <body>
 
+<!-- LOADING SCREEN -->
+<div class="loading" id="loading">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Connecting to database...</div>
+</div>
+
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="logo"><div class="logo-badge">SUBLET</div> Post Production Tracker</div>
@@ -171,7 +182,8 @@ textarea{resize:vertical;min-height:64px;}
   <div class="topbar-sub">Offlot Cycle Tracker</div>
   <div class="topbar-right">
     <div class="topbar-date" id="today-lbl"></div>
-    <button class="btn-export" onclick="exportFile()">⬇ Export &amp; Save</button>
+    <div class="sync-dot" id="sync-dot"></div>
+    <div class="sync-label" id="sync-label">Connecting...</div>
   </div>
 </div>
 
@@ -221,18 +233,13 @@ textarea{resize:vertical;min-height:64px;}
   <div class="empty" id="empty" style="display:none"><span>🔍</span>Nothing matches.</div>
 </div>
 
-<!-- ── VEHICLE MODAL ── -->
+<!-- VEHICLE MODAL -->
 <div class="overlay" id="ov" onclick="bgck(event)">
  <div class="modal">
   <div class="mhead">
-    <div>
-      <div class="mtitle" id="mt">Add Vehicle</div>
-      <div class="msub" id="msub"></div>
-    </div>
+    <div><div class="mtitle" id="mt">Add Vehicle</div><div class="msub" id="msub"></div></div>
     <button class="mclose" onclick="closeM()">✕</button>
   </div>
-
-  <!-- Core fields -->
   <div class="fg">
     <div class="fl"><label>VIN</label><input id="fv" placeholder="17-char VIN"></div>
     <div class="fl"><label>Stock #</label><input id="fs" placeholder="Optional"></div>
@@ -247,31 +254,28 @@ textarea{resize:vertical;min-height:64px;}
     <div class="fl"><label>Date Returned / Done</label><input id="fdr" type="date"></div>
     <div class="fl"><label>Last Follow-Up Date</label><input id="ffu" type="date"></div>
   </div>
-
-  <!-- Note history -->
   <div class="msec">📋 Note History</div>
   <div class="note-history" id="note-history"><div class="note-empty">No notes yet.</div></div>
-
-  <!-- Add new note -->
   <div class="msec" style="margin-top:12px;">➕ Add New Note</div>
   <div class="add-note-area">
     <textarea id="fn" placeholder="Type a status update, parts info, ETA change reason, etc..."></textarea>
   </div>
-
   <div class="mactions">
     <button class="bdel" id="bdel" onclick="delRec()" style="display:none">Delete Record</button>
     <button class="bcancel" onclick="closeM()">Cancel</button>
-    <button class="bsave" onclick="saveRec()">Save</button>
+    <button class="bsave" id="bsave" onclick="saveRec()">
+      <span class="saving-spinner"></span>Save
+    </button>
   </div>
  </div>
 </div>
 
-<!-- ── ETA REASON MODAL ── -->
+<!-- ETA REASON MODAL -->
 <div class="mini-overlay" id="eta-ov">
  <div class="mini-modal">
   <div class="mini-title">📅 Why is the ETA changing?</div>
   <div class="mini-sub">Select a reason or type a custom one. This will be logged in the vehicle's note history.</div>
-  <div class="reason-grid" id="reason-grid">
+  <div class="reason-grid">
     <button class="reason-opt" onclick="pickReason(this)">Parts on back order — no ETA</button>
     <button class="reason-opt" onclick="pickReason(this)">Dealership ordered wrong part</button>
     <button class="reason-opt" onclick="pickReason(this)">Dealership misdiagnosed issue</button>
@@ -288,102 +292,62 @@ textarea{resize:vertical;min-height:64px;}
  </div>
 </div>
 
-<script>
-// ─────────────────────────────────────────────
-//  HELPERS
-// ─────────────────────────────────────────────
+<!-- Firebase SDKs -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, set, push, remove, update }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ── FIREBASE CONFIG ──
+const firebaseConfig = {
+  apiKey: "AIzaSyDTTyJv46hx5XmgAowOT4cDpd6Bfr-_iLI",
+  authDomain: "pp-tolleson-sublet-tracker.firebaseapp.com",
+  databaseURL: "https://pp-tolleson-sublet-tracker-default-rtdb.firebaseio.com",
+  projectId: "pp-tolleson-sublet-tracker",
+  storageBucket: "pp-tolleson-sublet-tracker.firebasestorage.app",
+  messagingSenderId: "1015570459858",
+  appId: "1:1015570459858:web:12951cd58e097d87f0d10b"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+const vehiclesRef = ref(db, 'vehicles');
+
+// ── HELPERS ──
 const today = new Date(); today.setHours(0,0,0,0);
 const cd = d => { if(!d) return null; const x=Math.floor((today-new Date(d+'T00:00:00'))/86400000); return x>=0?x:0; };
 const fmt = d => { if(!d) return '—'; return new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'}); };
 const ts  = () => new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'2-digit',hour:'numeric',minute:'2-digit',hour12:true});
 const g   = id => document.getElementById(id);
 
-// ─────────────────────────────────────────────
-//  DATA
-//  notes: array of { ts, type ('note'|'eta'|'status'), text }
-// ─────────────────────────────────────────────
-let vehicles = [
-  {id:1, vin:'KMUHFESB3SU258874',stock:'',year:2025,make:'Dodge',  model:'Charger',       tech:'',reason:'EV Malfunction',    vendor:'Casa Grande',    dateAdded:'2026-01-29',eta:'2026-04-27',dateReturned:null,        lastFollowUp:'2026-05-12',
-   notes:[
-    {ts:'Jan 29, 2026, 8:00 AM',type:'note',text:'Vehicle sent to different dealer from CG. Waiting on motor, no ETA. Both electric motors have to be replaced.'},
-    {ts:'Apr 15, 2026, 9:15 AM',type:'note',text:'Main chamber spark plug ordered, being tested – may need a new engine.'},
-    {ts:'Apr 21, 2026, 10:30 AM',type:'eta', text:'ETA changed → May 22. Reason: Parts on back order — no ETA. EV cooling system filled with transmission fluid, everything must be replaced. Electric motors on back order.'},
-    {ts:'Apr 27, 2026, 2:00 PM',type:'note',text:'Current ETA for parts is 5/22 (could change). EV battery pack, front and rear motors, and full EV cooling system all need replacement.'},
-    {ts:'May 6, 2026, 11:00 AM', type:'note',text:'ETA still 5/22 for parts. Vehicle still waiting on back ordered parts.'},
-    {ts:'May 12, 2026, 8:45 AM', type:'note',text:'Still waiting on back ordered parts. No change.'},
-   ]},
-  {id:2, vin:'1C4RJHBR8TC202781',stock:'',year:2026,make:'Jeep',   model:'Grand Cherokee', tech:'',reason:'Diag',              vendor:'Casa Grande',    dateAdded:'2026-03-09',eta:'2026-04-26',dateReturned:null,        lastFollowUp:'2026-05-12',
-   notes:[
-    {ts:'Mar 9, 2026, 8:00 AM', type:'note',text:'Currently in shop in CG. ETA 4/15.'},
-    {ts:'Apr 16, 2026, 9:00 AM',type:'note',text:'Main chamber fuse ordered. Open case with Stellantis. No ETA.'},
-    {ts:'Apr 24, 2026, 1:00 PM',type:'note',text:'Parts ordered through Star. No ETA.'},
-    {ts:'Apr 27, 2026, 3:00 PM',type:'eta', text:'ETA changed → May 1. Reason: Waiting on OEM approval. Parts ordered through Star with ETA 5/1.'},
-    {ts:'May 12, 2026, 9:00 AM',type:'note',text:'Has an issue Stellantis is aware of. Working on a software update due sometime this quarter.'},
-   ]},
-  {id:3, vin:'1N4BL4DV1PN315552',stock:'',year:2023,make:'Nissan', model:'Altima',         tech:'',reason:'Rear camera inop',  vendor:'Nissan Avondale',dateAdded:'2026-03-22',eta:'2026-04-28',dateReturned:null,        lastFollowUp:'2026-05-12',
-   notes:[
-    {ts:'Mar 22, 2026, 8:00 AM', type:'note',text:'Part ordered ETA 4/14.'},
-    {ts:'Apr 21, 2026, 10:00 AM',type:'note',text:'Part arrived, may be defective. Nissan reaching out to technical assistance.'},
-    {ts:'Apr 22, 2026, 2:00 PM', type:'eta', text:'ETA changed → Apr 27. Reason: Dealership ordered wrong part. New radio unit also defective. Nissan Field Engineer will install Monday 4/27.'},
-    {ts:'Apr 29, 2026, 11:00 AM',type:'eta', text:'ETA changed — new radio arrived with the same issue. Field engineer reaching out to the radio manufacturer.'},
-    {ts:'May 4, 2026, 9:00 AM',  type:'note',text:'Engineers still looking into it.'},
-    {ts:'May 12, 2026, 8:30 AM', type:'note',text:'Still waiting on engineer. No update.'},
-   ]},
-  {id:4, vin:'1FM5K8B80JGB55931',stock:'',year:2018,make:'Ford',   model:'Explorer',       tech:'',reason:'Water pump',        vendor:'Rodeo Ford',     dateAdded:'2026-04-14',eta:null,        dateReturned:'2026-04-26',lastFollowUp:'2026-04-25',
-   notes:[
-    {ts:'Apr 14, 2026, 8:00 AM',type:'note',text:'TPMS and water pump. Parts ordered for water pump.'},
-    {ts:'May 1, 2026, 9:00 AM', type:'note',text:'TPMS sensors will not program.'},
-    {ts:'May 4, 2026, 11:00 AM',type:'status',text:'Vehicle ready. Marked completed.'},
-   ]},
-  {id:5, vin:'3C4PJMB20TT206783',stock:'',year:2026,make:'Jeep',   model:'Grand Cherokee', tech:'',reason:'Recall and leaks',  vendor:'Casa Grande',    dateAdded:'2026-04-11',eta:null,        dateReturned:'2026-04-29',lastFollowUp:'2026-04-28',
-   notes:[
-    {ts:'Apr 11, 2026, 8:00 AM',type:'note',  text:'Electrical issue, open case with Star. Working with Star, they are sending a TA.'},
-    {ts:'Apr 29, 2026, 3:00 PM',type:'status',text:'Vehicle returned. Marked completed.'},
-   ]},
-  {id:6, vin:'KNDEU2AAXM7051421',stock:'',year:2021,make:'Kia',    model:'Seltos',         tech:'',reason:'Codes and recall',  vendor:'Kia Avondale',   dateAdded:'2026-04-18',eta:null,        dateReturned:null,        lastFollowUp:'2026-05-11',
-   notes:[
-    {ts:'Apr 18, 2026, 8:00 AM',type:'note',text:'Pending diag at Kia. Will need engine replaced — covered under warranty, 7-10 days for part.'},
-    {ts:'May 8, 2026, 9:00 AM', type:'note',text:'Still waiting for engine to arrive.'},
-    {ts:'May 11, 2026, 10:00 AM',type:'note',text:'Engine out for delivery. Will be ready end of week.'},
-   ]},
-  {id:7, vin:'KM8R5DHE1NU385466',stock:'',year:2022,make:'Hyundai',model:'Palisade',        tech:'',reason:'Needs reprogramming',vendor:'Hyundai',        dateAdded:'2026-04-19',eta:null,        dateReturned:null,        lastFollowUp:'2026-05-12',
-   notes:[
-    {ts:'Apr 19, 2026, 8:00 AM',type:'note',text:'Vehicle needs a new head unit. Estimate $3,652.53. Waiting for approval.'},
-    {ts:'May 8, 2026, 9:30 AM', type:'note',text:'New radio should arrive 5/8, ETA 5/11.'},
-    {ts:'May 11, 2026, 2:00 PM',type:'note',text:'Parts arrived, waiting for tech to install.'},
-   ]},
-  {id:8, vin:'3C6MRWAZ2SE532472',stock:'',year:2025,make:'Ram',    model:'Promaster',      tech:'',reason:'Transport Damage',  vendor:'LHM Collision',  dateAdded:'2026-04-19',eta:null,        dateReturned:'2026-05-02',lastFollowUp:'2026-05-02',
-   notes:[
-    {ts:'Apr 19, 2026, 8:00 AM',type:'note',  text:'Vehicle pending diag. Pending Kick.'},
-    {ts:'May 11, 2026, 11:00 AM',type:'status',text:'Vehicle approved for wholesale. Marked completed.'},
-   ]},
-  {id:9, vin:'7SAYGDEE4NF354223',stock:'',year:2022,make:'Tesla',  model:'Model Y',        tech:'',reason:'Engine noise',      vendor:'Tesla Tempe',    dateAdded:'2026-04-21',eta:null,        dateReturned:null,        lastFollowUp:'2026-05-12',
-   notes:[
-    {ts:'Apr 21, 2026, 8:00 AM',type:'note',text:'Waiting for diag.'},
-    {ts:'May 7, 2026, 9:00 AM', type:'note',text:'Still waiting for diag.'},
-    {ts:'May 8, 2026, 10:00 AM',type:'note',text:'Vehicle waiting for parts to arrive.'},
-    {ts:'May 11, 2026, 9:00 AM',type:'note',text:'Still waiting for parts to arrive.'},
-   ]},
-  {id:10,vin:'1C4PJXFN8SW528411',stock:'',year:2025,make:'Jeep',   model:'Wrangler',       tech:'',reason:'Sirius inop',       vendor:'Moore Jeep',     dateAdded:'2026-04-28',eta:null,        dateReturned:null,        lastFollowUp:'2026-05-12',
-   notes:[{ts:'May 12, 2026, 8:00 AM',type:'note',text:'Ready for pickup.'}]},
-  {id:11,vin:'3C63R3DJ3SG571348',stock:'',year:2025,make:'Ram',    model:'3500',           tech:'',reason:'Engine',            vendor:'LHM Dodge',      dateAdded:'2026-04-28',eta:null,        dateReturned:'2026-04-29',lastFollowUp:'2026-04-29',
-   notes:[
-    {ts:'Apr 28, 2026, 8:00 AM',type:'note',  text:'Vehicle has diesel and is a gas vehicle. Will be towed back today.'},
-    {ts:'Apr 29, 2026, 3:00 PM',type:'status',text:'Towed back. Marked completed.'},
-   ]},
-  {id:12,vin:'1FMCU0HD3JUD28155',stock:'',year:2018,make:'Ford',   model:'Escape',         tech:'',reason:'Surging at idle',   vendor:'Rodeo Ford',     dateAdded:'2026-04-29',eta:null,        dateReturned:null,        lastFollowUp:'2026-05-02',
-   notes:[{ts:'Apr 29, 2026, 8:00 AM',type:'note',text:'Tech is looking at it today.'}]},
-  {id:13,vin:'WP1AA2A57NLB11303',stock:'',year:2022,make:'Porsche',model:'Macan',           tech:'',reason:'Transport Damage',  vendor:'LHM Collision',  dateAdded:'2026-05-02',eta:null,        dateReturned:null,        lastFollowUp:'2026-05-02',
-   notes:[{ts:'May 2, 2026, 10:00 AM',type:'note',text:'Estimate approved. Waiting on ETA.'}]},
-  {id:14,vin:'3GNAXPEG1SL277655',stock:'',year:2025,make:'Chevy',  model:'Equinox',        tech:'',reason:'Dash light',        vendor:'Chevy',          dateAdded:'2026-05-02',eta:null,        dateReturned:null,        lastFollowUp:null,         notes:[]},
-  {id:15,vin:'1G1FZ6S03P4180361',stock:'',year:2023,make:'Chevy',  model:'Bolt',           tech:'',reason:'Dash light',        vendor:'Chevy',          dateAdded:'2026-05-02',eta:null,        dateReturned:null,        lastFollowUp:null,         notes:[]},
-];
-let nid=16, eid=null, cf='open', sf='days', sd='desc';
-let _prevEta=null, _pendingEta=null, _etaReasonSelected=null;
+// ── STATE ──
+let vehicles = [];
+let eid = null, cf = 'open', sf = 'days', sd = 'desc';
+let _prevEta = null, _pendingEta = null, _etaReasonSelected = null, _etaResolve = null;
 
-// ─────────────────────────────────────────────
-//  STATUS
-// ─────────────────────────────────────────────
+// ── SYNC STATUS ──
+function setSyncStatus(state, label) {
+  const dot = g('sync-dot'), lbl = g('sync-label');
+  dot.className = 'sync-dot ' + state;
+  lbl.textContent = label;
+}
+
+// ── FIREBASE LISTENER — real-time updates ──
+onValue(vehiclesRef, snapshot => {
+  const data = snapshot.val();
+  vehicles = data
+    ? Object.entries(data).map(([fbKey, v]) => ({ ...v, fbKey }))
+    : [];
+  g('loading').style.display = 'none';
+  setSyncStatus('synced', 'Live');
+  render();
+}, err => {
+  g('loading').style.display = 'none';
+  setSyncStatus('error', 'Offline');
+  console.error(err);
+});
+
+// ── STATUS ──
 const gs = v => {
   if (v.dateReturned) return 'done';
   if (!v.lastFollowUp) return 'nofollowup';
@@ -408,9 +372,7 @@ const fulbl = v => {
   return d===0?'<span class="fu-today">Today</span>':`<span class="fu-ok">${d}d ago</span>`;
 };
 
-// ─────────────────────────────────────────────
-//  KPIs
-// ─────────────────────────────────────────────
+// ── KPIs ──
 function upd() {
   const op=vehicles.filter(v=>!v.dateReturned);
   g('k-total').textContent=vehicles.length;
@@ -422,15 +384,13 @@ function upd() {
   g('k-avg').textContent=avg+'d';
 }
 
-// ─────────────────────────────────────────────
-//  FILTER / SORT / RENDER
-// ─────────────────────────────────────────────
-function setF(f) {
+// ── FILTER / SORT / RENDER ──
+window.setF = f => {
   cf=f;
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.f===f));
   document.querySelectorAll('.kpi[data-f]').forEach(k=>k.classList.toggle('active',k.dataset.f===f));
   render();
-}
+};
 const mf = v => {
   const s=gs(v);
   if(cf==='open')      return !v.dateReturned;
@@ -441,7 +401,7 @@ const mf = v => {
   return true;
 };
 const ms=(v,q)=>{if(!q)return true;const l=q.toLowerCase();return[v.vin,v.make,v.model,v.vendor,v.reason,v.stock,String(v.year)].some(f=>f&&f.toLowerCase().includes(l));};
-function srt(f){sd=sf===f?(sd==='asc'?'desc':'asc'):'desc';sf=f;render();}
+window.srt = f=>{sd=sf===f?(sd==='asc'?'desc':'asc'):'desc';sf=f;render();};
 const sv=(v,f)=>({days:cd(v.dateAdded)||0,vehicle:`${v.year} ${v.make} ${v.model}`,eta:v.eta||'zzzz',followup:v.lastFollowUp||'zzzz',dateAdded:v.dateAdded||''}[f]??v[f]??'');
 const scls={done:'sd',critical:'sc',warning:'sw',ontrack:'so',nofollowup:'sn'};
 
@@ -455,7 +415,7 @@ function render() {
   tb.innerHTML=list.map(v=>{
     const s=gs(v);
     const lastNote=v.notes&&v.notes.length?v.notes[v.notes.length-1].text:'—';
-    return `<tr class="${scls[s]||''} ${s==='done'?'faded':''}" onclick="openEdit(${v.id})">
+    return `<tr class="${scls[s]||''} ${s==='done'?'faded':''}" onclick="openEdit('${v.fbKey}')">
       <td><div class="vname">${v.year} ${v.make} ${v.model}</div><div class="vvin">${v.vin}</div></td>
       <td class="vcell-reason" title="${v.reason||''}">${v.reason||'—'}</td>
       <td class="vvendor">${v.vendor||'—'}</td>
@@ -470,44 +430,32 @@ function render() {
   upd();
 }
 
-// ─────────────────────────────────────────────
-//  NOTE HISTORY RENDER
-// ─────────────────────────────────────────────
+// ── NOTE HISTORY ──
 function renderNotes(notes) {
   const el=g('note-history');
   if(!notes||!notes.length){el.innerHTML='<div class="note-empty">No notes yet.</div>';return;}
-  // show newest first
-  const sorted=[...notes].reverse();
-  el.innerHTML=sorted.map(n=>{
+  el.innerHTML=[...notes].reverse().map(n=>{
     const cls=n.type==='eta'?'note-eta':n.type==='status'?'note-status':'note-user';
     const badge=n.type==='eta'?'<span class="note-type-badge ntb-eta">ETA Change</span>':n.type==='status'?'<span class="note-type-badge ntb-status">Status</span>':'<span class="note-type-badge ntb-note">Note</span>';
-    return `<div class="note-entry ${cls}">
-      <div class="note-meta">${badge} <span>${n.ts}</span></div>
-      <div class="note-text">${n.text}</div>
-    </div>`;
+    return `<div class="note-entry ${cls}"><div class="note-meta">${badge} <span>${n.ts}</span></div><div class="note-text">${n.text}</div></div>`;
   }).join('');
 }
 
-// ─────────────────────────────────────────────
-//  MODAL OPEN / CLOSE
-// ─────────────────────────────────────────────
-function openAdd() {
+// ── MODAL ──
+window.openAdd = () => {
   eid=null; _prevEta=null; _pendingEta=null;
-  g('mt').textContent='Add Vehicle';
-  g('msub').textContent='';
-  g('bdel').style.display='none';
-  g('eta-flag').style.display='none';
+  g('mt').textContent='Add Vehicle'; g('msub').textContent='';
+  g('bdel').style.display='none'; g('eta-flag').style.display='none';
   ['fv','fs','fy','fmk','fmd','ft','fr','fvn','fda','fe','fdr','ffu','fn'].forEach(i=>g(i).value='');
   renderNotes([]);
   g('ov').classList.add('open');
-}
-function openEdit(id) {
-  eid=id; const v=vehicles.find(x=>x.id===id); if(!v) return;
-  _prevEta=v.eta||null; _pendingEta=null;
+};
+window.openEdit = fbKey => {
+  const v=vehicles.find(x=>x.fbKey===fbKey); if(!v) return;
+  eid=fbKey; _prevEta=v.eta||null; _pendingEta=null;
   g('mt').textContent=`${v.year} ${v.make} ${v.model}`;
   g('msub').textContent=v.vin;
-  g('bdel').style.display='';
-  g('eta-flag').style.display='none';
+  g('bdel').style.display=''; g('eta-flag').style.display='none';
   g('fv').value=v.vin||''; g('fs').value=v.stock||''; g('fy').value=v.year||'';
   g('fmk').value=v.make||''; g('fmd').value=v.model||''; g('ft').value=v.tech||'';
   g('fr').value=v.reason||''; g('fvn').value=v.vendor||''; g('fda').value=v.dateAdded||'';
@@ -515,70 +463,56 @@ function openEdit(id) {
   g('fn').value='';
   renderNotes(v.notes||[]);
   g('ov').classList.add('open');
-}
-function closeM(){g('ov').classList.remove('open'); _pendingEta=null;}
-function bgck(e){if(e.target===g('ov'))closeM();}
+};
+window.closeM = () => { g('ov').classList.remove('open'); _pendingEta=null; };
+window.bgck   = e => { if(e.target===g('ov')) window.closeM(); };
 
-// ─────────────────────────────────────────────
-//  ETA CHANGE DETECTION
-// ─────────────────────────────────────────────
-function etaChanged() {
+// ── ETA CHANGE ──
+window.etaChanged = () => {
   const newVal=g('fe').value||null;
-  if(eid && newVal !== _prevEta) {
-    _pendingEta=newVal;
-    g('eta-flag').style.display='';
-  } else {
-    _pendingEta=null;
-    g('eta-flag').style.display='none';
-  }
-}
+  if(eid && newVal!==_prevEta){ _pendingEta=newVal; g('eta-flag').style.display=''; }
+  else { _pendingEta=null; g('eta-flag').style.display='none'; }
+};
 
-// ─────────────────────────────────────────────
-//  ETA REASON MODAL
-// ─────────────────────────────────────────────
-let _etaResolve=null;
-function askEtaReason(oldEta, newEta) {
+// ── ETA REASON MODAL ──
+function askEtaReason() {
   return new Promise(resolve => {
-    _etaResolve=resolve;
-    _etaReasonSelected=null;
+    _etaResolve=resolve; _etaReasonSelected=null;
     g('custom-reason').value='';
     document.querySelectorAll('.reason-opt').forEach(b=>b.classList.remove('selected'));
     g('eta-ov').classList.add('open');
   });
 }
-function pickReason(btn) {
+window.pickReason = btn => {
   document.querySelectorAll('.reason-opt').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected');
-  _etaReasonSelected=btn.textContent.trim();
+  btn.classList.add('selected'); _etaReasonSelected=btn.textContent.trim();
   g('custom-reason').value='';
-}
-function cancelEtaChange() {
+};
+window.cancelEtaChange = () => {
   g('eta-ov').classList.remove('open');
-  // revert ETA field
-  const v=vehicles.find(x=>x.id===eid);
-  if(v){g('fe').value=v.eta||'';}
-  _pendingEta=null;
-  g('eta-flag').style.display='none';
+  const v=vehicles.find(x=>x.fbKey===eid);
+  if(v) g('fe').value=v.eta||'';
+  _pendingEta=null; g('eta-flag').style.display='none';
   if(_etaResolve){_etaResolve(null);_etaResolve=null;}
-}
-function confirmEtaChange() {
+};
+window.confirmEtaChange = () => {
   const custom=g('custom-reason').value.trim();
   const reason=custom||_etaReasonSelected;
   if(!reason){alert('Please select or type a reason for the ETA change.');return;}
   g('eta-ov').classList.remove('open');
   if(_etaResolve){_etaResolve(reason);_etaResolve=null;}
-}
+};
 
-// ─────────────────────────────────────────────
-//  SAVE RECORD
-// ─────────────────────────────────────────────
-async function saveRec() {
+// ── SAVE ──
+window.saveRec = async () => {
+  const btn = g('bsave');
+  btn.classList.add('saving'); btn.disabled=true;
+
   const newEta=g('fe').value||null;
   const noteText=g('fn').value.trim();
   const newDateReturned=g('fdr').value||null;
 
-  // build base data
-  const data={
+  const data = {
     vin:g('fv').value.trim().toUpperCase(),
     stock:g('fs').value.trim(),
     year:parseInt(g('fy').value)||null,
@@ -593,75 +527,59 @@ async function saveRec() {
     lastFollowUp:g('ffu').value||null,
   };
 
-  let newNotes=[];
+  let newNotes = [];
 
-  if(eid) {
-    const v=vehicles.find(x=>x.id===eid);
-    newNotes=[...(v.notes||[])];
+  try {
+    if (eid) {
+      const v = vehicles.find(x=>x.fbKey===eid);
+      newNotes = [...(v.notes||[])];
 
-    // ETA change: ask for reason
-    if(_pendingEta !== null && newEta !== _prevEta) {
-      const reason=await askEtaReason(_prevEta, newEta);
-      if(!reason) return; // user cancelled
-      newNotes.push({
-        ts:ts(), type:'eta',
-        text:`ETA changed from ${fmt(_prevEta)||'(none)'} → ${fmt(newEta)||'(none)'}. Reason: ${reason}`
-      });
+      if (_pendingEta !== null && newEta !== _prevEta) {
+        const reason = await askEtaReason();
+        if (!reason) { btn.classList.remove('saving'); btn.disabled=false; return; }
+        newNotes.push({ ts:ts(), type:'eta', text:`ETA changed from ${fmt(_prevEta)||'(none)'} → ${fmt(newEta)||'(none)'}. Reason: ${reason}` });
+      }
+      if (newDateReturned && !v.dateReturned)
+        newNotes.push({ts:ts(),type:'status',text:`Vehicle marked as completed / returned. Date: ${fmt(newDateReturned)}`});
+      if (!newDateReturned && v.dateReturned)
+        newNotes.push({ts:ts(),type:'status',text:'Vehicle re-opened (date returned cleared).'});
+      if (noteText)
+        newNotes.push({ts:ts(),type:'note',text:noteText});
+
+      setSyncStatus('syncing','Saving...');
+      await set(ref(db, `vehicles/${eid}`), { ...data, notes: newNotes });
+    } else {
+      if (noteText) newNotes.push({ts:ts(),type:'note',text:noteText});
+      setSyncStatus('syncing','Saving...');
+      await push(vehiclesRef, { ...data, notes: newNotes });
     }
-
-    // status change to completed
-    if(newDateReturned && !v.dateReturned) {
-      newNotes.push({ts:ts(),type:'status',text:`Vehicle marked as completed / returned. Date: ${fmt(newDateReturned)}`});
-    }
-    // status change back to open
-    if(!newDateReturned && v.dateReturned) {
-      newNotes.push({ts:ts(),type:'status',text:`Vehicle re-opened (date returned cleared).`});
-    }
-
-    // user typed a note
-    if(noteText) {
-      newNotes.push({ts:ts(),type:'note',text:noteText});
-    }
-
-    vehicles[vehicles.findIndex(x=>x.id===eid)]={...v,...data,notes:newNotes};
-  } else {
-    // new vehicle
-    if(noteText) newNotes.push({ts:ts(),type:'note',text:noteText});
-    vehicles.push({id:nid++,...data,notes:newNotes});
+    setSyncStatus('synced','Saved ✓');
+    setTimeout(()=>setSyncStatus('synced','Live'), 2000);
+    window.closeM();
+  } catch(err) {
+    setSyncStatus('error','Save failed');
+    alert('Error saving: ' + err.message);
   }
-  closeM();
-  render();
-}
+  btn.classList.remove('saving'); btn.disabled=false;
+};
 
-function delRec(){
-  if(!eid||!confirm('Delete this vehicle record? This cannot be undone.'))return;
-  vehicles=vehicles.filter(v=>v.id!==eid);
-  closeM(); render();
-}
+// ── DELETE ──
+window.delRec = async () => {
+  if (!eid || !confirm('Delete this vehicle record? This cannot be undone.')) return;
+  try {
+    setSyncStatus('syncing','Deleting...');
+    await remove(ref(db, `vehicles/${eid}`));
+    setSyncStatus('synced','Live');
+    window.closeM();
+  } catch(err) {
+    setSyncStatus('error','Delete failed');
+    alert('Error deleting: ' + err.message);
+  }
+};
 
-// ─────────────────────────────────────────────
-//  EXPORT — saves updated HTML with embedded data
-// ─────────────────────────────────────────────
-function exportFile() {
-  const html = document.documentElement.outerHTML;
-  const dataJSON = JSON.stringify(vehicles);
-  // Replace the vehicles array in the exported HTML with current data
-  const updated = html.replace(/let vehicles = \[[\s\S]*?\];\s*\nlet nid/, `let vehicles = ${dataJSON};\nlet nid`);
-  const blob = new Blob([updated], {type:'text/html'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  const d = new Date();
-  a.download = `sublet_tracker_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.html`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-// ─────────────────────────────────────────────
-//  INIT
-// ─────────────────────────────────────────────
-g('today-lbl').textContent=today.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
+// ── INIT ──
+g('today-lbl').textContent = today.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric',year:'numeric'});
 document.querySelector('.kpi[data-f="open"]').classList.add('active');
-setF('open');
 </script>
 </body>
 </html>
